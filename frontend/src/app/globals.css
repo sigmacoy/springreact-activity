@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-black;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[#CCCCCC] rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#999999];
+  }
+
+  /* Focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-black ring-offset-2;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-black text-white;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply min-h-screen pt-16;
+  }
+
+  .page-content {
+    @apply max-w-7xl mx-auto px-6 py-8;
+  }
+
+  .page-header {
+    @apply mb-8;
+  }
+
+  .page-title {
+    @apply text-3xl font-medium text-black mb-2;
+  }
+
+  .page-description {
+    @apply text-[#737373] text-base;
+  }
+
+  .card {
+    @apply bg-white border border-[#E5E5E5] rounded-md;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-black text-white text-sm font-medium rounded-md hover:bg-[#1a1a1a] transition-colors duration-150;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white text-black text-sm font-medium rounded-md border border-[#E5E5E5] hover:bg-[#F5F5F5] transition-colors duration-150;
+  }
+
+  .btn-danger {
+    @apply px-6 py-3 bg-white text-[#CC0000] text-sm font-medium rounded-md border border-[#FFE0E0] hover:bg-[#FFF0F0] hover:border-[#FFCCCC] transition-colors duration-150;
+  }
+
+  .input {
+    @apply w-full px-4 py-3 border border-[#E5E5E5] rounded-md text-sm placeholder-[#CCCCCC] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-colors duration-150;
+  }
+
+  .input-error {
+    @apply border-[#CC0000] focus:border-[#CC0000] focus:ring-[#CC0000];
+  }
+
+  .label {
+    @apply block text-sm font-medium text-black mb-2;
+  }
+
+  .error-message {
+    @apply mt-1 text-sm text-[#CC0000];
+  }
+
+  .success-message {
+    @apply p-4 bg-[#F0FFF0] border border-[#E0FFE0] rounded-md text-sm text-[#008000];
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
