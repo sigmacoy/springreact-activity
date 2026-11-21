@@ -14,10 +14,10 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-[#E5E5E5] h-16">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-[#E8E8E8] h-16">
       <nav className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/" className="text-xl font-medium text-black">
+          <Link href="/" className="text-lg font-medium text-black tracking-tight">
             Course & Teacher Management
           </Link>
 
@@ -28,11 +28,7 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-150 ${
-                    isActive
-                      ? 'bg-black text-white'
-                      : 'text-[#737373] hover:text-black hover:bg-[#F5F5F5]'
-                  }`}
+                  className={`nav-link ${isActive ? 'nav-link-active' : 'nav-link-inactive'}`}
                 >
                   {item.label}
                 </Link>

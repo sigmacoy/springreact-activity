@@ -8,7 +8,7 @@
   }
 
   html {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -21,8 +21,8 @@
 
   /* Scrollbar styling */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -30,11 +30,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-[#CCCCCC] rounded-full;
+    @apply bg-[#D0D0D0] rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-[#999999];
+    @apply bg-[#A0A0A0];
   }
 
   /* Focus styles */
@@ -49,6 +49,7 @@
 }
 
 @layer components {
+  /* Layout */
   .page-container {
     @apply min-h-screen pt-16;
   }
@@ -62,31 +63,54 @@
   }
 
   .page-title {
-    @apply text-3xl font-medium text-black mb-2;
+    @apply text-2xl font-normal text-black tracking-tight mb-1;
   }
 
   .page-description {
-    @apply text-[#737373] text-base;
+    @apply text-[#888] text-sm text-balance;
   }
 
+  /* Cards & Surfaces */
   .card {
-    @apply bg-white border border-[#E5E5E5] rounded-md;
+    @apply bg-white border border-[#E8E8E8] rounded-lg;
+  }
+
+  .card-header {
+    @apply px-6 py-4 border-b border-[#E8E8E8];
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-primary {
-    @apply px-6 py-3 bg-black text-white text-sm font-medium rounded-md hover:bg-[#1a1a1a] transition-colors duration-150;
+    @apply btn bg-black text-white hover:bg-[#1a1a1a] focus-visible:ring-black;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-white text-black text-sm font-medium rounded-md border border-[#E5E5E5] hover:bg-[#F5F5F5] transition-colors duration-150;
+    @apply btn bg-white text-black border border-[#E8E8E8] hover:bg-[#FAFAFA] focus-visible:ring-black;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-[#666] hover:bg-[#F5F5F5] hover:text-black focus-visible:ring-black;
   }
 
   .btn-danger {
-    @apply px-6 py-3 bg-white text-[#CC0000] text-sm font-medium rounded-md border border-[#FFE0E0] hover:bg-[#FFF0F0] hover:border-[#FFCCCC] transition-colors duration-150;
+    @apply btn bg-white text-[#CC0000] border border-[#FFE0E0] hover:bg-[#FFF5F5] hover:border-[#FFCCCC] focus-visible:ring-[#CC0000];
   }
 
+  .btn-icon {
+    @apply btn p-2;
+  }
+
+  /* Form Elements */
   .input {
-    @apply w-full px-4 py-3 border border-[#E5E5E5] rounded-md text-sm placeholder-[#CCCCCC] focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-colors duration-150;
+    @apply w-full px-4 py-2.5 border border-[#E8E8E8] rounded-lg text-sm placeholder-[#BBB] bg-white transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-black focus:border-black;
   }
 
   .input-error {
@@ -94,20 +118,198 @@
   }
 
   .label {
-    @apply block text-sm font-medium text-black mb-2;
+    @apply block text-sm font-medium text-black mb-1.5;
   }
 
+  .select {
+    @apply input appearance-none bg-no-repeat bg-right pr-10;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-size: 1.5rem 1.5rem;
+  }
+
+  .textarea {
+    @apply input resize-y min-h-[80px];
+  }
+
+  /* Messages */
   .error-message {
-    @apply mt-1 text-sm text-[#CC0000];
+    @apply mt-1.5 text-sm text-[#CC0000];
   }
 
   .success-message {
-    @apply p-4 bg-[#F0FFF0] border border-[#E0FFE0] rounded-md text-sm text-[#008000];
+    @apply p-4 bg-[#F5FFF5] border border-[#E0FFE0] rounded-lg text-sm text-[#057005];
+  }
+
+  .alert-error {
+    @apply p-4 bg-[#FFF5F5] border border-[#FFE0E0] rounded-lg text-sm text-[#CC0000];
+  }
+
+  /* Tables */
+  .table-container {
+    @apply overflow-x-auto;
+  }
+
+  .table {
+    @apply w-full text-sm;
+  }
+
+  .table th {
+    @apply px-6 py-3 text-left text-xs font-medium text-[#888] uppercase tracking-wider bg-[#FAFAFA] border-b border-[#E8E8E8];
+  }
+
+  .table td {
+    @apply px-6 py-4 whitespace-nowrap border-b border-[#F0F0F0];
+  }
+
+  .table tbody tr {
+    @apply transition-colors duration-100;
+  }
+
+  .table tbody tr:hover {
+    @apply bg-[#FAFAFA];
+  }
+
+  .table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  /* Empty & Loading States */
+  .empty-state {
+    @apply py-12 px-6 text-center;
+  }
+
+  .empty-state-icon {
+    @apply mx-auto mb-3 text-4xl text-[#DDD];
+  }
+
+  .empty-state-title {
+    @apply text-base font-medium text-black mb-1;
+  }
+
+  .empty-state-description {
+    @apply text-sm text-[#888];
+  }
+
+  .loading-skeleton {
+    @apply animate-pulse bg-[#F0F0F0] rounded;
+  }
+
+  /* Modal/Dialog */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm;
+  }
+
+  .modal {
+    @apply bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl shadow-xl;
+  }
+
+  .modal-header {
+    @apply flex items-center justify-between px-6 py-4 border-b border-[#E8E8E8];
+  }
+
+  .modal-title {
+    @apply text-lg font-medium text-black;
+  }
+
+  .modal-close {
+    @apply p-1 text-[#888] hover:text-black hover:bg-[#F5F5F5] rounded-lg transition-colors;
+  }
+
+  .modal-body {
+    @apply p-6;
+  }
+
+  .modal-footer {
+    @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-[#E8E8E8];
+  }
+
+  /* Dashboard Stats */
+  .stat-card {
+    @apply block p-6 bg-white border border-[#E8E8E8] rounded-xl hover:border-[#D0D0D0] hover:shadow-sm transition-all duration-200;
+  }
+
+  .stat-label {
+    @apply text-sm text-[#888] font-medium mb-1.5;
+  }
+
+  .stat-value {
+    @apply text-3xl font-medium text-black transition-colors;
+  }
+
+  .stat-icon {
+    @apply text-3xl opacity-50 transition-opacity;
+  }
+
+  .stat-footer {
+    @apply mt-4 pt-4 border-t border-[#F0F0F0];
+  }
+
+  .stat-link {
+    @apply text-sm text-[#888] hover:text-black transition-colors;
+  }
+
+  /* Group hover utilities for stat cards */
+  .stat-card:hover .stat-value {
+    @apply text-[#1a1a1a];
+  }
+
+  .stat-card:hover .stat-icon {
+    @apply opacity-100;
+  }
+
+  /* Navigation */
+  .nav-link {
+    @apply px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150;
+  }
+
+  .nav-link-active {
+    @apply bg-black text-white;
+  }
+
+  .nav-link-inactive {
+    @apply text-[#888] hover:text-black hover:bg-[#F5F5F5];
+  }
+
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150;
+  }
+
+  .sidebar-link-active {
+    @apply bg-black text-white;
+  }
+
+  .sidebar-link-inactive {
+    @apply text-[#888] hover:text-black hover:bg-[#F5F5F5];
+  }
+
+  /* Divider */
+  .divider {
+    @apply h-px bg-[#E8E8E8] border-0;
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #D0D0D0 transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #D0D0D0;
+    border-radius: 3px;
   }
 }

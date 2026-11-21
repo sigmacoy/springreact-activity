@@ -8,6 +8,20 @@ import StudentForm from '@/components/StudentForm';
 import { fetchStudents, createStudent, deleteStudent } from '@/services/studentService';
 import { Student, StudentFormData } from '@/types/student';
 
+const plusIcon = (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
+const closeIcon = (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +81,7 @@ export default function StudentsPage() {
     <div className="page-container">
       <Navbar />
       <Sidebar />
-      <main className="page-content ml-64 md:ml-0">
+      <main className="page-content ml-0 md:ml-64">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="page-title">Students</h1>
@@ -78,6 +92,7 @@ export default function StudentsPage() {
             className="btn-primary"
             disabled={isLoading}
           >
+            {plusIcon}
             Add Student
           </button>
         </div>
@@ -89,7 +104,7 @@ export default function StudentsPage() {
         )}
 
         {error && !isLoading && (
-          <div className="mb-6 p-4 bg-[#FFF0F0] border border-[#FFE0E0] rounded-md text-sm text-[#CC0000]">
+          <div className="mb-6 alert-error" role="alert">
             {error}
             <button
               onClick={loadStudents}
@@ -110,19 +125,20 @@ export default function StudentsPage() {
         </div>
 
         {showForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-            <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-md shadow-xl">
-              <div className="p-6 border-b border-[#E5E5E5] flex items-center justify-between">
-                <h2 className="text-xl font-medium text-black">Create Student</h2>
+          <div className="modal-overlay" onClick={handleCancel} role="dialog" aria-modal="true" aria-labelledby="student-form-title">
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2 id="student-form-title" className="modal-title">Create Student</h2>
                 <button
                   onClick={handleCancel}
-                  className="text-[#737373] hover:text-black transition-colors"
+                  className="modal-close"
                   disabled={isSubmitting}
+                  aria-label="Close form"
                 >
-                  ✕
+                  {closeIcon}
                 </button>
               </div>
-              <div className="p-6">
+              <div className="modal-body">
                 <StudentForm
                   onSubmit={handleCreateStudent}
                   onCancel={handleCancel}

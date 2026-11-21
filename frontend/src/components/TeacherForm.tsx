@@ -69,23 +69,19 @@ export default function TeacherForm({ onSubmit, onCancel, isSubmitting = false, 
   };
 
   const inputClassName = (fieldName: keyof TeacherFormData) =>
-    `w-full px-4 py-3 border rounded-md text-sm transition-colors duration-150 ${
-      errors[fieldName]
-        ? 'border-[#CC0000] focus:border-[#CC0000] focus:ring-[#CC0000]'
-        : 'border-[#E5E5E5] focus:border-black focus:ring-black'
-    } bg-white placeholder-[#CCCCCC] focus:outline-none focus:ring-1`;
+    `input ${errors[fieldName] ? 'input-error' : ''}`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {submitError && (
-        <div className="p-4 bg-[#FFF0F0] border border-[#FFE0E0] rounded-md text-sm text-[#CC0000]">
+        <div className="alert-error" role="alert">
           {submitError}
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="firstName" className="block text-sm font-medium text-black mb-2">
+          <label htmlFor="firstName" className="label">
             First Name <span className="text-[#CC0000]">*</span>
           </label>
           <input
@@ -98,12 +94,14 @@ export default function TeacherForm({ onSubmit, onCancel, isSubmitting = false, 
             placeholder="John"
             disabled={isSubmitting}
             maxLength={50}
+            aria-invalid={errors.firstName ? 'true' : 'false'}
+            aria-describedby={errors.firstName ? 'firstName-error' : undefined}
           />
-          {errors.firstName && <p className="mt-1 text-sm text-[#CC0000]">{errors.firstName}</p>}
+          {errors.firstName && <p id="firstName-error" className="error-message" role="alert">{errors.firstName}</p>}
         </div>
 
         <div>
-          <label htmlFor="lastName" className="block text-sm font-medium text-black mb-2">
+          <label htmlFor="lastName" className="label">
             Last Name <span className="text-[#CC0000]">*</span>
           </label>
           <input
@@ -116,13 +114,15 @@ export default function TeacherForm({ onSubmit, onCancel, isSubmitting = false, 
             placeholder="Doe"
             disabled={isSubmitting}
             maxLength={50}
+            aria-invalid={errors.lastName ? 'true' : 'false'}
+            aria-describedby={errors.lastName ? 'lastName-error' : undefined}
           />
-          {errors.lastName && <p className="mt-1 text-sm text-[#CC0000]">{errors.lastName}</p>}
+          {errors.lastName && <p id="lastName-error" className="error-message" role="alert">{errors.lastName}</p>}
         </div>
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-black mb-2">
+        <label htmlFor="email" className="label">
           Email <span className="text-[#CC0000]">*</span>
         </label>
         <input
@@ -135,12 +135,14 @@ export default function TeacherForm({ onSubmit, onCancel, isSubmitting = false, 
           placeholder="john.doe@example.com"
           disabled={isSubmitting}
           maxLength={100}
+          aria-invalid={errors.email ? 'true' : 'false'}
+          aria-describedby={errors.email ? 'email-error' : undefined}
         />
-        {errors.email && <p className="mt-1 text-sm text-[#CC0000]">{errors.email}</p>}
+        {errors.email && <p id="email-error" className="error-message" role="alert">{errors.email}</p>}
       </div>
 
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-black mb-2">
+        <label htmlFor="phone" className="label">
           Phone
         </label>
         <input
@@ -153,12 +155,14 @@ export default function TeacherForm({ onSubmit, onCancel, isSubmitting = false, 
           placeholder="+1-555-0123"
           disabled={isSubmitting}
           maxLength={20}
+          aria-invalid={errors.phone ? 'true' : 'false'}
+          aria-describedby={errors.phone ? 'phone-error' : undefined}
         />
-        {errors.phone && <p className="mt-1 text-sm text-[#CC0000]">{errors.phone}</p>}
+        {errors.phone && <p id="phone-error" className="error-message" role="alert">{errors.phone}</p>}
       </div>
 
       <div>
-        <label htmlFor="department" className="block text-sm font-medium text-black mb-2">
+        <label htmlFor="department" className="label">
           Department
         </label>
         <input
@@ -174,21 +178,21 @@ export default function TeacherForm({ onSubmit, onCancel, isSubmitting = false, 
         />
       </div>
 
-      <div className="flex items-center gap-4 pt-4 border-t border-[#E5E5E5]">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-6 py-3 bg-black text-white text-sm font-medium rounded-md hover:bg-[#1a1a1a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
-        >
-          {isSubmitting ? 'Creating...' : 'Create Teacher'}
-        </button>
+      <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E8E8E8]">
         <button
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="px-6 py-3 bg-white text-black text-sm font-medium rounded-md border border-[#E5E5E5] hover:bg-[#F5F5F5] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+          className="btn-secondary"
         >
           Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="btn-primary"
+        >
+          {isSubmitting ? 'Creating...' : 'Create Teacher'}
         </button>
       </div>
     </form>

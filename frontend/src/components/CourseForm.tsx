@@ -102,23 +102,25 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
   };
 
   const inputClassName = (fieldName: keyof CourseFormErrors) =>
-    `w-full px-4 py-3 border rounded-md text-sm transition-colors duration-150 ${
-      errors[fieldName]
-        ? 'border-[#CC0000] focus:border-[#CC0000] focus:ring-[#CC0000]'
-        : 'border-[#E5E5E5] focus:border-black focus:ring-black'
-    } bg-white placeholder-[#CCCCCC] focus:outline-none focus:ring-1`;
+    `input ${errors[fieldName] ? 'input-error' : ''}`;
+
+  const selectClassName = (fieldName: keyof CourseFormErrors) =>
+    `select ${errors[fieldName] ? 'input-error' : ''}`;
+
+  const textareaClassName = (fieldName: keyof CourseFormErrors) =>
+    `textarea ${errors[fieldName] ? 'input-error' : ''}`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {submitError && (
-        <div className="p-4 bg-[#FFF0F0] border border-[#FFE0E0] rounded-md text-sm text-[#CC0000]">
+        <div className="alert-error" role="alert">
           {submitError}
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-black mb-2">
+          <label htmlFor="name" className="label">
             Course Name <span className="text-[#CC0000]">*</span>
           </label>
           <input
@@ -131,12 +133,14 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
             placeholder="Introduction to Computer Science"
             disabled={isSubmitting}
             maxLength={100}
+            aria-invalid={errors.name ? 'true' : 'false'}
+            aria-describedby={errors.name ? 'name-error' : undefined}
           />
-          {errors.name && <p className="mt-1 text-sm text-[#CC0000]">{errors.name}</p>}
+          {errors.name && <p id="name-error" className="error-message" role="alert">{errors.name}</p>}
         </div>
 
         <div>
-          <label htmlFor="courseCode" className="block text-sm font-medium text-black mb-2">
+          <label htmlFor="courseCode" className="label">
             Course Code <span className="text-[#CC0000]">*</span>
           </label>
           <input
@@ -149,13 +153,15 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
             placeholder="CS101"
             maxLength={20}
             disabled={isSubmitting}
+            aria-invalid={errors.courseCode ? 'true' : 'false'}
+            aria-describedby={errors.courseCode ? 'courseCode-error' : undefined}
           />
-          {errors.courseCode && <p className="mt-1 text-sm text-[#CC0000]">{errors.courseCode}</p>}
+          {errors.courseCode && <p id="courseCode-error" className="error-message" role="alert">{errors.courseCode}</p>}
         </div>
       </div>
 
       <div>
-        <label htmlFor="credits" className="block text-sm font-medium text-black mb-2">
+        <label htmlFor="credits" className="label">
           Credits
         </label>
         <input
@@ -169,12 +175,14 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
           min="1"
           max="10"
           disabled={isSubmitting}
+          aria-invalid={errors.credits ? 'true' : 'false'}
+          aria-describedby={errors.credits ? 'credits-error' : undefined}
         />
-        {errors.credits && <p className="mt-1 text-sm text-[#CC0000]">{errors.credits}</p>}
+        {errors.credits && <p id="credits-error" className="error-message" role="alert">{errors.credits}</p>}
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-black mb-2">
+        <label htmlFor="description" className="label">
           Description
         </label>
         <textarea
@@ -183,7 +191,7 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
           value={formData.description}
           onChange={handleChange}
           rows={3}
-          className={`${inputClassName('description')} resize-y`}
+          className={textareaClassName('description')}
           placeholder="Course description..."
           disabled={isSubmitting}
           maxLength={500}
@@ -191,15 +199,15 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
       </div>
 
       <div>
-        <label htmlFor="teacherId" className="block text-sm font-medium text-black mb-2">
+        <label htmlFor="teacherId" className="label">
           Teacher (Optional)
         </label>
         {teachersLoading ? (
-          <div className="w-full px-4 py-3 border border-[#E5E5E5] rounded-md bg-[#FAFAFA] text-sm text-[#737373]">
+          <div className="input bg-[#FAFAFA] text-[#888] cursor-wait" aria-busy="true">
             Loading teachers...
           </div>
         ) : teachersError ? (
-          <div className="w-full px-4 py-3 border border-[#E5E5E5] rounded-md bg-[#FFF0F0] text-sm text-[#CC0000]">
+          <div className="input bg-[#FFF5F5] border-[#FFE0E0] text-[#CC0000]" role="alert">
             Failed to load teachers: {teachersError}
           </div>
         ) : (
@@ -208,8 +216,10 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
             name="teacherId"
             value={formData.teacherId}
             onChange={handleChange}
-            className={inputClassName('teacherId')}
+            className={selectClassName('teacherId')}
             disabled={isSubmitting}
+            aria-invalid={errors.teacherId ? 'true' : 'false'}
+            aria-describedby={errors.teacherId ? 'teacherId-error' : undefined}
           >
             <option value="">Select a teacher (optional)</option>
             {teachers.map((teacher) => (
@@ -219,23 +229,24 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
             ))}
           </select>
         )}
+        {errors.teacherId && <p id="teacherId-error" className="error-message" role="alert">{errors.teacherId}</p>}
       </div>
 
-      <div className="flex items-center gap-4 pt-4 border-t border-[#E5E5E5]">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-6 py-3 bg-black text-white text-sm font-medium rounded-md hover:bg-[#1a1a1a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
-        >
-          {isSubmitting ? 'Creating...' : 'Create Course'}
-        </button>
+      <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E8E8E8]">
         <button
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="px-6 py-3 bg-white text-black text-sm font-medium rounded-md border border-[#E5E5E5] hover:bg-[#F5F5F5] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+          className="btn-secondary"
         >
           Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="btn-primary"
+        >
+          {isSubmitting ? 'Creating...' : 'Create Course'}
         </button>
       </div>
     </form>

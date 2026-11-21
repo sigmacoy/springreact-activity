@@ -21,8 +21,15 @@ export default function StudentForm({ onSubmit, onCancel, isSubmitting = false, 
   const [errors, setErrors] = useState<Partial<StudentFormData>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const validate = (data: StudentFormData): boolean => {
-    const newErrors: Partial<StudentFormData> = {};
+  interface FormDataRaw {
+    firstname: string;
+    lastname: string;
+    program: string;
+    yearlevel?: string | number;
+  }
+
+  const validate = (data: FormDataRaw): boolean => {
+    const newErrors: Partial<FormDataRaw> = {};
 
     if (!data.firstname.trim()) {
       newErrors.firstname = 'First name is required';
@@ -36,11 +43,12 @@ export default function StudentForm({ onSubmit, onCancel, isSubmitting = false, 
       newErrors.program = 'Program is required';
     }
 
-    if (data.yearlevel !== undefined && (data.yearlevel < 1 || data.yearlevel > 10 || !Number.isInteger(data.yearlevel))) {
+    const yearLevelNum = data.yearlevel !== undefined && data.yearlevel !== '' ? Number(data.yearlevel) : undefined;
+    if (yearLevelNum !== undefined && (yearLevelNum < 1 || yearLevelNum > 10 || !Number.isInteger(yearLevelNum))) {
       newErrors.yearlevel = 'Year level must be an integer between 1 and 10';
     }
 
-    setErrors(newErrors);
+    setErrors(newErrors as Partial<StudentFormData>);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -66,23 +74,22 @@ export default function StudentForm({ onSubmit, onCancel, isSubmitting = false, 
   };
 
   const inputClassName = (fieldName: keyof StudentFormData) =>
-    `w-full px-4 py-3 border rounded-md text-sm transition-colors duration-150 ${
-      errors[fieldName]
-        ? 'border-[#CC0000] focus:border-[#CC0000] focus:ring-[#CC0000]'
-        : 'border-[#E5E5E5] focus:border-black focus:ring-black'
-    } bg-white placeholder-[#CCCCCC] focus:outline-none focus:ring-1`;
+    `input ${errors[fieldName] ? 'input-error' : ''}`;
+
+  const selectClassName = (fieldName: keyof StudentFormData) =>
+    `select ${errors[fieldName] ? 'input-error' : ''}`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {submitError && (
-        <div className="p-4 bg-[#FFF0F0] border border-[#FFE0E0] rounded-md text-sm text-[#CC0000]">
+        <div className="alert-error" role="alert">
           {submitError}
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="firstname" className="block text-sm font-medium text-black mb-2">
+          <label htmlFor="firstname" className="label">
             First Name <span className="text-[#CC0000]">*</span>
           </label>
           <input
@@ -95,12 +102,14 @@ export default function StudentForm({ onSubmit, onCancel, isSubmitting = false, 
             placeholder="Von"
             disabled={isSubmitting}
             maxLength={50}
+            aria-invalid={errors.firstname ? 'true' : 'false'}
+            aria-describedby={errors.firstname ? 'firstname-error' : undefined}
           />
-          {errors.firstname && <p className="mt-1 text-sm text-[#CC0000]">{errors.firstname}</p>}
+          {errors.firstname && <p id="firstname-error" className="error-message" role="alert">{errors.firstname}</p>}
         </div>
 
         <div>
-          <label htmlFor="lastname" className="block text-sm font-medium text-black mb-2">
+          <label htmlFor="lastname" className="label">
             Last Name <span className="text-[#CC0000]">*</span>
           </label>
           <input
@@ -113,13 +122,15 @@ export default function StudentForm({ onSubmit, onCancel, isSubmitting = false, 
             placeholder="Godinez"
             disabled={isSubmitting}
             maxLength={50}
+            aria-invalid={errors.lastname ? 'true' : 'false'}
+            aria-describedby={errors.lastname ? 'lastname-error' : undefined}
           />
-          {errors.lastname && <p className="mt-1 text-sm text-[#CC0000]">{errors.lastname}</p>}
+          {errors.lastname && <p id="lastname-error" className="error-message" role="alert">{errors.lastname}</p>}
         </div>
       </div>
 
       <div>
-        <label htmlFor="program" className="block text-sm font-medium text-black mb-2">
+        <label htmlFor="program" className="label">
           Program <span className="text-[#CC0000]">*</span>
         </label>
         <select
@@ -127,8 +138,10 @@ export default function StudentForm({ onSubmit, onCancel, isSubmitting = false, 
           name="program"
           value={formData.program}
           onChange={handleChange}
-          className={inputClassName('program')}
+          className={selectClassName('program')}
           disabled={isSubmitting}
+          aria-invalid={errors.program ? 'true' : 'false'}
+          aria-describedby={errors.program ? 'program-error' : undefined}
         >
           <option value="">Select a program</option>
           <option value="BSIT">BSIT - Bachelor of Science in Information Technology</option>
@@ -137,11 +150,11 @@ export default function StudentForm({ onSubmit, onCancel, isSubmitting = false, 
           <option value="ACT">ACT - Associate in Computer Technology</option>
           <option value="OTHER">Other</option>
         </select>
-        {errors.program && <p className="mt-1 text-sm text-[#CC0000]">{errors.program}</p>}
+        {errors.program && <p id="program-error" className="error-message" role="alert">{errors.program}</p>}
       </div>
 
       <div>
-        <label htmlFor="yearlevel" className="block text-sm font-medium text-black mb-2">
+        <label htmlFor="yearlevel" className="label">
           Year Level
         </label>
         <input
@@ -155,25 +168,27 @@ export default function StudentForm({ onSubmit, onCancel, isSubmitting = false, 
           min="1"
           max="10"
           disabled={isSubmitting}
+          aria-invalid={errors.yearlevel ? 'true' : 'false'}
+          aria-describedby={errors.yearlevel ? 'yearlevel-error' : undefined}
         />
-        {errors.yearlevel && <p className="mt-1 text-sm text-[#CC0000]">{errors.yearlevel}</p>}
+        {errors.yearlevel && <p id="yearlevel-error" className="error-message" role="alert">{errors.yearlevel}</p>}
       </div>
 
-      <div className="flex items-center gap-4 pt-4 border-t border-[#E5E5E5]">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-6 py-3 bg-black text-white text-sm font-medium rounded-md hover:bg-[#1a1a1a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
-        >
-          {isSubmitting ? 'Creating...' : 'Create Student'}
-        </button>
+      <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E8E8E8]">
         <button
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="px-6 py-3 bg-white text-black text-sm font-medium rounded-md border border-[#E5E5E5] hover:bg-[#F5F5F5] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+          className="btn-secondary"
         >
           Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="btn-primary"
+        >
+          {isSubmitting ? 'Creating...' : 'Create Student'}
         </button>
       </div>
     </form>

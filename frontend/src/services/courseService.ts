@@ -81,3 +81,11 @@ export async function deleteCourse(id: number | string): Promise<void> {
     throw new Error('Failed to delete course');
   }
 }
+
+interface CourseResponse {
+  courses: Course[];
+  page?: number;
+  size?: number;
+  totalElements?: number;
+  totalPages?: number;
+}

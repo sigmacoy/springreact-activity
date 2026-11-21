@@ -81,3 +81,11 @@ export async function deleteTeacher(id: number | string): Promise<void> {
     throw new Error('Failed to delete teacher');
   }
 }
+
+interface TeacherResponse {
+  teachers: Teacher[];
+  page?: number;
+  size?: number;
+  totalElements?: number;
+  totalPages?: number;
+}
