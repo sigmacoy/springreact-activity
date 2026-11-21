@@ -52,7 +52,7 @@ export async function createCourse(data: CourseFormData): Promise<Course> {
       courseCode: data.courseCode.trim().toUpperCase(),
       ...(data.description && { description: data.description.trim() }),
       ...(data.credits && { credits: data.credits }),
-      ...(data.teacherId && { teacher: { id: data.teacherId } }),
+      ...(data.teacherId && { teacher: { id: parseInt(data.teacherId, 10) } }),
     };
 
     const response = await apiPost<Course>('/courses', payload);

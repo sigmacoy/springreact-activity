@@ -47,7 +47,6 @@ export async function apiGet<T>(endpoint: string): Promise<T> {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
   });
 
   return handleResponse<T>(response);
@@ -59,7 +58,6 @@ export async function apiPost<T>(endpoint: string, data: unknown): Promise<T> {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
     body: JSON.stringify(data),
   });
 
@@ -72,7 +70,6 @@ export async function apiPut<T>(endpoint: string, data: unknown): Promise<T> {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
     body: JSON.stringify(data),
   });
 
@@ -85,7 +82,6 @@ export async function apiDelete<T>(endpoint: string): Promise<T> {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
   });
 
   return handleResponse<T>(response);

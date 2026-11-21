@@ -68,6 +68,10 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
       newErrors.credits = 'Credits must be an integer between 1 and 10';
     }
 
+    if (!data.teacherId) {
+      newErrors.teacherId = 'Teacher is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -79,13 +83,13 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
     if (!validate(formData)) return;
 
     try {
-      // Transform to match backend API: teacher should be { id: teacherId }
+      // Pass raw formData to onSubmit; courseService handles the transformation
       const submitData = {
         name: formData.name.trim(),
         courseCode: formData.courseCode.trim().toUpperCase(),
         ...(formData.description && { description: formData.description.trim() }),
         ...(formData.credits && { credits: formData.credits }),
-        ...(formData.teacherId && { teacher: { id: formData.teacherId } }),
+        ...(formData.teacherId && { teacherId: formData.teacherId }),
       };
       await onSubmit(submitData);
     } catch (error) {
@@ -95,7 +99,8 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const parsedValue = name === 'credits' && value !== '' ? parseInt(value, 10) : value;
+    setFormData((prev) => ({ ...prev, [name]: parsedValue }));
     if (errors[name as keyof CourseFormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -200,7 +205,7 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
 
       <div>
         <label htmlFor="teacherId" className="label">
-          Teacher (Optional)
+          Teacher <span className="text-[#CC0000]">*</span>
         </label>
         {teachersLoading ? (
           <div className="input bg-[#FAFAFA] text-[#888] cursor-wait" aria-busy="true">
@@ -218,10 +223,11 @@ export default function CourseForm({ onSubmit, onCancel, isSubmitting = false, i
             onChange={handleChange}
             className={selectClassName('teacherId')}
             disabled={isSubmitting}
+            required
             aria-invalid={errors.teacherId ? 'true' : 'false'}
             aria-describedby={errors.teacherId ? 'teacherId-error' : undefined}
           >
-            <option value="">Select a teacher (optional)</option>
+            <option value="">Select a teacher</option>
             {teachers.map((teacher) => (
               <option key={teacher.id} value={String(teacher.id)}>
                 {teacher.firstName} {teacher.lastName} ({teacher.email})
